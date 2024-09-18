@@ -1,10 +1,11 @@
 services:
   db:
-    image: postgres
+    image: postgres:alpine
     restart: always
+    ports:
+      - 5432:5432
     environment:
       POSTGRES_PASSWORD: melvis123
       POSTGRES_USER: linux
-    ports:
-      - 5432:5432
-      
+      POSTGRES_DB: melvis-blog-docker-db-1
+    

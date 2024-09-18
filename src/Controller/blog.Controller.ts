@@ -6,7 +6,7 @@ const prisma = new PrismaClient();
 
 interface Iblog {
 	title: string;
-	slug: string;
+	Slug: string;
 	vue: number;
 	content: string;
 }
@@ -37,37 +37,48 @@ const blogController = {
 			res.json({ msg: 'no users in db' }).status(HttpCode.BAD_REQUEST);
 		}
 	},
-	createOneUser: async (req: Request, res: Response): Promise<void> => {
-		const { title, slug, vue, content } : Iblog = req.body;
+	createOneUser: async (req: Request, res: Response) => {
+		const { title, Slug, vue, content }  = req.body;
+		console.log(req.body)
 		try {
 			const myBlog = await prisma.blog.create({
 				data: {
 					title,
-					slug,
+					Slug,
 					vue,
 					content
 				}
 			});
+			if(!title || !Slug || !content || !vue){
+            res.json({msg:"please fill all the fields"})
+			}
 			res.json(myBlog);
 			console.log(myBlog);
 		} catch (error) {
 			console.error(error);
-			res.json({ msg: 'not created' }).status(HttpCode.BAD_REQUEST);
+			res.json({msg:"not created"}).status(HttpCode.BAD_REQUEST);
 		}
 	},
 	createManyUSers: async (req: Request, res: Response): Promise<void> => {
 		try {
-			const { title, slug, content, vue } : Iblog = req.body;
+			const { title, Slug, content, vue } : Iblog = req.body;
+			console.log(req.body)
+			 // Ensure all required fields are present
+			 if (!title || !Slug || !content || !vue) {
+				 res.status(400).json({ message: "All fields are required" });
+			}
 			const myBlogs = await prisma.blog.createMany({
-				data: [{title, slug, content, vue}]
+				data: [{title, Slug, content, vue}]
 			});
+			 res.json(myBlogs).status(HttpCode.CREATED)
+			console.log("succes")
 		} catch (error) {
 			console.error(error);
 			res.json({ msg: 'not created' }).status(HttpCode.BAD_REQUEST)
 		}
 	},
 	updateBlog: async (req: Request, res: Response): Promise<void> => {
-		const { title, slug, vue, content } : Iblog = req.body;
+		const { title, Slug, vue, content } : Iblog = req.body;
 		const { id } = req.params;
 
 		const blogId: string = id;
@@ -78,7 +89,7 @@ const blogController = {
 				},
 				data: {
 					title,
-					slug,
+					Slug,
 					vue,
 					content
 				}

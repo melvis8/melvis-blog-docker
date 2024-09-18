@@ -10,7 +10,7 @@ datasource db {
 
 model Blog {
   Id        String   @id @default(uuid())
-  slug      String  
+  Slug      String  @unique
   vue       Int
   content   String
   title     String
